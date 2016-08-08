@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application_ble</string>
+    <string name="ble_uuid">cbab223f-9d78-42e8-aa3e-83b59b5963a8</string>
+</resources>

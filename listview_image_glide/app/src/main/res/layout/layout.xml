@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="@android:color/black"
+    android:layout_height="fill_parent"
+    android:padding="0dip" >
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:padding="5dp"
+        android:id="@+id/image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:background="@android:color/black"
+
+        android:src="@drawable/sample_0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Name"
+        android:id="@+id/text"
+        android:layout_marginLeft="5dip"
+        android:paddingLeft="0dp"
+        android:paddingTop="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxEms="8"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/image"
+        android:layout_toEndOf="@+id/image" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Date"
+        android:id="@+id/text1"
+        android:layout_below="@+id/text"
+        android:layout_marginLeft="5dip"
+        android:paddingLeft="0dp"
+        android:textColor="#FFFFFF"
+
+        android:paddingTop="10dp"
+        android:layout_toEndOf="@+id/image" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:text="Share"
+        android:id="@+id/button"
+        android:layout_alignBottom="@+id/text1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp"
+        android:focusable="false"
+        android:textSize="9sp"
+
+        android:onClick="share" />
+
+
+
+</RelativeLayout>

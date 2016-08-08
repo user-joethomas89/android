@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Side Drawer App</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="contact_detail_title">Contact Information</string>
+    <string name="action_settings">Settings</string>
+    <string name="Alert_for_no_contacts_found">No contacts found in your contact list!!!</string>
+    <string name="print_numbers_on_screen">Numbers</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
