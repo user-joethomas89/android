@@ -1,6 +1,5 @@
 package com.example.joe.project3_sidedrawer;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,20 +15,25 @@ import android.widget.TextView;
 public class GalleryFragment extends Fragment {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
-    private int animationFlag = -1;
-    Animation animation;
-    View rootView;
+    private boolean animationPlayed = false;
+    private View rootView;
+    private ImageView imageView;
+    private TextView textView;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        imageView = (ImageView) rootView.findViewById(R.id.imageJio);
+        textView = (TextView) rootView.findViewById(R.id.textJio);
         if (savedInstanceState != null) {
-            animationFlag = savedInstanceState.getInt("flag");
+            animationPlayed = savedInstanceState.getBoolean("animationPlayed");
         }
     }
 
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        Animation animation;
+
         if (nextAnim != 0) {
             animation = AnimationUtils.loadAnimation(getActivity(), nextAnim);
 
@@ -51,9 +55,9 @@ public class GalleryFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (animationFlag == -1) {
-                    Log.d(TAG, "Flag -1, Jio animation played.");
-                    ImageView imageView = (ImageView) rootView.findViewById(R.id.imageJio);
+                if (!animationPlayed) {
+                    Log.d(TAG, "Animation played is false, Jio animation played.");
+
                     Animation imageAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.enter_image_jio);
                     imageView.startAnimation(imageAnimation);
                     imageView.setVisibility(View.VISIBLE);
@@ -65,7 +69,6 @@ public class GalleryFragment extends Fragment {
 
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            TextView textView = (TextView) rootView.findViewById(R.id.textJio);
                             Animation textAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.enter_jio_text);
                             textView.startAnimation(textAnimation);
                             textView.setVisibility(View.VISIBLE);
@@ -81,9 +84,8 @@ public class GalleryFragment extends Fragment {
                     imageView.setVisibility(View.VISIBLE);
                     TextView textView = (TextView) rootView.findViewById(R.id.textJio);
                     textView.setVisibility(View.VISIBLE);
-                    animationFlag = -1;
-                    Log.d(TAG, "Flag set to -1");
-
+                    animationPlayed = false;
+                    Log.d(TAG, "Animation played set to false");
                 }
             }
         });
@@ -99,8 +101,8 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("flag", 111);
-        Log.d(TAG, "Flag set to 111 in \"onSaveInstanceState\"");
+        outState.putBoolean("animationPlayed", true);
+        Log.d(TAG, "Animation played set to true in \"onSaveInstanceState\"");
         super.onSaveInstanceState(outState);
     }
 }

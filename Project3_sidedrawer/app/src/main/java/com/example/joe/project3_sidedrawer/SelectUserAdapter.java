@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SelectUserAdapter extends BaseAdapter {
     private List<ContactsFragment.ContactInfo> data;
-    Context context;
+    private Context context;
 
     public SelectUserAdapter(List<ContactsFragment.ContactInfo> contactInfos, Context contxt) {
         data = contactInfos;
@@ -25,12 +25,20 @@ public class SelectUserAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        if (data != null) {
+            return data.size();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public Object getItem(int i) {
-        return data.get(i);
+        if (data != null) {
+            return data.get(i);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -42,46 +50,30 @@ public class SelectUserAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         View view = convertView;
-
+        final ContactsFragment.ContactInfo contactInfo = (ContactsFragment.ContactInfo) data.get(i);
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.fragment_layout, null);
+            ViewHolder v = new ViewHolder();
+            v.title = (TextView) view.findViewById(R.id.name);
+            v.phone = (TextView) view.findViewById(R.id.no);
+            v.imageView = (ImageView) view.findViewById(R.id.pic);
+            view.setTag(v);
+        }
+        ViewHolder holder = (ViewHolder) view.getTag();
+        holder.title.setText(contactInfo.getName());
+        if (contactInfo.getPhoneNumbers().size() > 1) {
+            holder.phone.setText(context.getString(R.string.print_numbers_on_screen, contactInfo.getPhoneNumbers().size()));
         } else {
-            view = convertView;
+            holder.phone.setText(contactInfo.getPhoneNumbers().toString().replace("[", "").replace("]", ""));
         }
-
-        ViewHolder v = new ViewHolder();
-        v.title = (TextView) view.findViewById(R.id.name);
-        v.phone = (TextView) view.findViewById(R.id.no);
-        v.imageView = (ImageView) view.findViewById(R.id.pic);
-        final ContactsFragment.ContactInfo contactInfo = (ContactsFragment.ContactInfo) data.get(i);
-        v.title.setText(contactInfo.getName());
-
-        int count = 0;
-        StringBuilder builder = new StringBuilder();
-        for (String value : contactInfo.getPhone()) {
-            builder.append(value);
-            builder.append("\n");
-            count++;
-        }
-        String text = builder.toString();
-        if (count > 1) {
-            String displayText;
-            displayText = String.valueOf(count) + " " + context.getString(R.string.print_numbers_on_screen);
-            v.phone.setText(displayText);
-        } else {
-            v.phone.setText(text);
-        }
-
         if (contactInfo.getThumbUri() != null) {
-            Glide.with(v.imageView.getContext())
+            Glide.with(holder.imageView.getContext())
                     .load(contactInfo.getThumbUri())
-                    .into(v.imageView);
+                    .into(holder.imageView);
         } else {
-            v.imageView.setImageResource(R.drawable.image);
+            holder.imageView.setImageResource(R.drawable.default_contact_image);
         }
-
-        view.setTag(contactInfo);
         return view;
     }
 

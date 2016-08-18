@@ -29,10 +29,8 @@ public class ContactsFragment extends Fragment {
     private int position = -1;
     private Dialog dialog;
     private ListView listView;
-    private Cursor phones;
     private SelectUserAdapter adapter;
     private boolean isActive;
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -48,6 +46,13 @@ public class ContactsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactInfos = new ArrayList<ContactInfo>();
         listView = (ListView) rootView.findViewById(R.id.contacts_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                position = i;
+                displayContactInfoDialog();
+            }
+        });
         adapter = new SelectUserAdapter(contactInfos, getActivity());
         return rootView;
     }
@@ -56,25 +61,22 @@ public class ContactsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         isActive = true;
-        Log.e(TAG,"now in onstart!!");
-
+        Log.d(TAG, "now in onstart!!");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG,"now in onresume!!");
+        Log.d(TAG, "now in onresume!!");
         contactInfos.clear();
         LoadContactAsyncTask loadContactInformation = new LoadContactAsyncTask();
         loadContactInformation.execute();
-
     }
 
     @Override
     public void onPause() {
-        phones.close();
         super.onPause();
-        Log.e(TAG,"now in onpause!!!");
+        Log.d(TAG, "now in onpause!!!");
     }
 
     @Override
@@ -83,27 +85,26 @@ public class ContactsFragment extends Fragment {
         if (dialog != null) {
             dialog.dismiss();
         }
-        Log.e(TAG,"now in onstop!!");
+        Log.d(TAG, "now in onstop!!");
         super.onStop();
     }
 
-    class LoadContactAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        HashMap<String, ContactInfo> hashMap = new HashMap<>();
+    private class LoadContactAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
-            if (phones != null) {
-                if (phones.getCount() == 0) {
+            Cursor contactRecords;
+            contactRecords = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+            if (contactRecords != null) {
+                HashMap<String, ContactInfo> hashMap = new HashMap<>();
+                if (contactRecords.getCount() == 0) {
                     Toast.makeText(getActivity(), R.string.Alert_for_no_contacts_found, Toast.LENGTH_LONG).show();
                 }
-                while (phones.moveToNext()) {
-                    String imageUri;
-                    String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                    String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    imageUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+                while (contactRecords.moveToNext()) {
+                    String id = contactRecords.getString(contactRecords.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+                    String name = contactRecords.getString(contactRecords.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String phoneNumber = contactRecords.getString(contactRecords.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    String imageUri = contactRecords.getString(contactRecords.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
 
                     if (hashMap.containsKey(id)) {
                         hashMap.get(id).numbers.add(phoneNumber);
@@ -114,7 +115,7 @@ public class ContactsFragment extends Fragment {
                     }
                 }
             } else {
-                phones.close();
+                contactRecords.close();
                 Log.d(TAG, "Cursor is null, cursor closed.");
             }
             return null;
@@ -123,51 +124,43 @@ public class ContactsFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-            listView.setAdapter(null);
             listView.setAdapter(adapter);
 
             if (position != -1) {
                 displayContactInfoDialog();
             }
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    position = i;
-                    displayContactInfoDialog();
-                }
-            });
         }
-
-
     }
 
     private void displayContactInfoDialog() {
-        ContactInfo data = contactInfos.get(position);
-        dialog = new Dialog(ContactsFragment.this.getActivity());
-        dialog.setContentView(R.layout.alertlayout);
-        dialog.setTitle(R.string.contact_detail_title);
-        StringBuilder builder = new StringBuilder();
-        for (String value : data.getPhone()) {
-            builder.append(value);
-            builder.append("\n");
-        }
-        String contactDetails = builder.toString();
-        TextView text1 = (TextView) dialog.findViewById(R.id.text1);
-        text1.setText(data.getName());
-        TextView text2 = (TextView) dialog.findViewById(R.id.text2);
-        text2.setText(contactDetails);
-        dialog.show();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (isActive) {
-                    position = -1;
-                    Log.d(TAG, "Position reset to -1");
-                }
+        if (position != -1) {
+            ContactInfo data = contactInfos.get(position);
+            dialog = new Dialog(ContactsFragment.this.getActivity());
+            dialog.setContentView(R.layout.alertlayout);
+            dialog.setTitle(R.string.contact_detail_title);
+            StringBuilder builder = new StringBuilder();
+            for (String value : data.getPhoneNumbers()) {
+                builder.append(value);
+                builder.append("\n");
             }
-        });
+            String contactDetails = builder.toString();
+            TextView text1 = (TextView) dialog.findViewById(R.id.text1);
+            text1.setText(data.getName());
+            TextView text2 = (TextView) dialog.findViewById(R.id.text2);
+            text2.setText(contactDetails);
+            dialog.show();
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if (isActive) {
+                        position = -1;
+                        Log.d(TAG, "Position reset to -1");
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, "Position is -1 within displayContactInfoDialog()");
+        }
     }
 
     public class ContactInfo {
@@ -186,7 +179,7 @@ public class ContactsFragment extends Fragment {
             return thumbUri;
         }
 
-        public List<String> getPhone() {
+        public List<String> getPhoneNumbers() {
             return numbers;
         }
 

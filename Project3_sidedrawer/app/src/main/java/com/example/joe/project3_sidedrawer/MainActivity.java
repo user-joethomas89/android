@@ -20,18 +20,16 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
     private int id1;
-    private MainFragment fragment1 = new MainFragment();
-    private GalleryFragment fragment2 = new GalleryFragment();
-    private ContactsFragment fragment3 = new ContactsFragment();
+    private MainFragment mainFragment = new MainFragment();
+    private GalleryFragment galleryFragment = new GalleryFragment();
+    private ContactsFragment contactsFragment = new ContactsFragment();
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     public enum userChoice {
-
         CAMERA,
         GALLERY,
         CONTACTS
     }
-
     private userChoice choice;
 
     private void createNewFrag(Fragment fragment) {
@@ -44,11 +42,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NavigationView navigationView;
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            createNewFrag(fragment1);
-            Log.d(TAG, "Fragment 1 created in onCreate");
+            createNewFrag(mainFragment);
+            Log.d(TAG, "Fragment Main created in onCreate");
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -95,25 +92,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerClosed(View drawerView) {
                 if (id == R.id.nav_camera && choice != userChoice.CAMERA) {
-
                     choice = userChoice.CAMERA;
-                    createNewFrag(fragment1);
-                    Log.d(TAG, "Fragment 1 created in \"onNavigationItemSelected\"");
-
+                    createNewFrag(mainFragment);
+                    Log.d(TAG, "Fragment Main created in \"onNavigationItemSelected\"");
 
                 } else if (id == R.id.nav_gallery && choice != userChoice.GALLERY) {
-
                     choice = userChoice.GALLERY;
-                    createNewFrag(fragment2);
-                    Log.d(TAG, "Fragment 2 created in \"onNavigationItemSelected\"");
-
+                    createNewFrag(galleryFragment);
+                    Log.d(TAG, "Fragment Gallery created in \"onNavigationItemSelected\"");
 
                 } else if (id == R.id.nav_contacts && choice != userChoice.CONTACTS) {
-
                     choice = userChoice.CONTACTS;
-                    createNewFrag(fragment3);
-                    Log.d(TAG, "Fragment 3 created in \"onNavigationItemSelected\"");
-
+                    createNewFrag(contactsFragment);
+                    Log.d(TAG, "Fragment Contacts created in \"onNavigationItemSelected\"");
 
                 } else if (id == R.id.nav_manage) {
 
