@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/dialog_bottom_padding"
+    android:paddingLeft="@dimen/dialog_horizontal_padding"
+    android:paddingRight="@dimen/dialog_horizontal_padding"
+    android:paddingTop="@dimen/dialog_top_padding">
+
+    <TextView
+        android:id="@+id/add_edit_jiobit_dialog_title"
+        style="@style/DialogTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/new_jiobit_dialog_title" />
+
+    <EditText
+        android:id="@+id/jiobit_nickname_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_edit_jiobit_dialog_title"
+        android:hint="@string/new_jiobit_dialog_nickname_hint"
+        android:inputType="textCapWords"
+        android:maxLength="30"
+        android:paddingTop="25dp"
+        android:singleLine="true" />
+
+    [ALEX] don't need to add (xmlns:android="http://schemas.android.com/apk/res/android) it's already on the top'
+    <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/horizontal_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/jiobit_nickname_edittext">
+
+        [ALEX] do not use names with suffix 1 2 3 ... use the words representing the images (bear, bird, butterfly, etc...)
+
+        [ALEX] the id's of the viewrs in the layout files in this app are lower canse with underscoes,
+        so use android:id="@+id/avatar_bear_imagebutton" and so on
+
+        <LinearLayout
+            android:id="@+id/layout_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <ImageButton
+                android:id="@+id/avatarImageButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+                android:src="@drawable/img_bear" />
+
+            <ImageButton
+                android:id="@+id/avatarImageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+                android:src="@drawable/img_bird" />
+
+            <ImageButton
+                android:id="@+id/avatarImageButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+                android:src="@drawable/img_butterfly" />
+
+
+            <ImageButton
+                android:id="@+id/avatarImageButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+
+                android:src="@drawable/img_cat" />
+
+            <ImageButton
+                android:id="@+id/avatarImageButton5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+                android:src="@drawable/img_dog" />
+
+            <ImageButton
+                android:id="@+id/avatarImageButton6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/intercom_transparent_white"
+                android:padding="5dp"
+                android:src="@drawable/img_crab" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+    <EditText
+        android:id="@+id/jiobit_deviceid_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/horizontal_scrollview"
+        android:hint="@string/new_jiobit_dialog_deviceid_hint"
+        android:maxLength="40"
+        android:paddingTop="15dp"
+        android:singleLine="true" />
+
+</RelativeLayout>
